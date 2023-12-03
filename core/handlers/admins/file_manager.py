@@ -16,12 +16,9 @@ from aiogram.dispatcher.storage import FSMContext
 from filters.is_admin import IsAdmin
 from filters.is_private import IsPrivate
 
-from data.config import SUPER_ADMIN
+from data.config import API_KEY as api_key
 
 
-
-# Replace 'YOUR_API_KEY' with your actual Google Drive API key
-api_key = 'AIzaSyCBlVMt3uiyBu3F22Q_IO4VNuMn5byzVng'
 
 # Replace '/path/to/output/directory' with the desired directory to save the downloaded file
 output_directory = './core/files/zips'

@@ -1,19 +1,11 @@
-# set global config variables
+from environs import Env
 
+env = Env()
+env.read_env()
 
+BOT_TOKEN = env.str("BOT_TOKEN")  
 
+ADMINS_ = env.list("ADMINS") 
+ADMINS = [int(admin) for admin in ADMINS_] 
 
-# token for bot
-BOT_TOKEN = '6247709377:AAGk_Au-WgHK9FEF0Mp3QN4OkLmwvVdC3Zg'
-
-# admins
-
-ADMINS = [1393139047]
-
-
-SUPER_ADMIN = 1393139047
-
-
-# CHANNELS = [await bot.get_chat(channel) for channel in channels]      
-
-# Path: data\config.py
+API_KEY = env.str("API_KEY")
