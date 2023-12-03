@@ -1,3 +1,4 @@
+import asyncio
 from aiogram import types
 from aiogram.dispatcher.filters.builtin import CommandStart
 from aiogram.dispatcher.storage import FSMContext
@@ -57,7 +58,17 @@ async def get_contact(message: types.Message, state: FSMContext):
         await UserState.GetContact.set()
 
         
+# cancel handler
+@dp.message_handler(IsPrivate(), state="*", commands="cancel")
+async def cancel(message: types.Message, state: FSMContext):
+    await message.answer("Barcha amallar bekor qilindi.", reply_markup=remove_button())
+    await state.finish()
+    await asyncio.sleep(2)
+    text = "Assalomu alaykum hurmatli abituriyent. Siz Sarbon o'quv markazining rasmiy botidan foydalanayapsiz!"
+    await message.answer(text=text, reply_markup=remove_button())
 
+    text = "Javoblar varaqasi ID raqamini kiriting."
+    await message.answer(text=text)
 
 
 @dp.message_handler(IsPrivate(), commands="error")

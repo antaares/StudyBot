@@ -22,6 +22,7 @@ class AdminState(StatesGroup):
     # manage channels
     ForwardingMessage = State()
     ChannelID = State()
+    ChannelDeleteConfirm = State()
 
 
     # file manager
