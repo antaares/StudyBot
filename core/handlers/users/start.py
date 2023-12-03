@@ -17,7 +17,7 @@ from states.users import UserState
 
 
 
-@dp.message_handler(IsPrivate(),CommandStart())
+@dp.message_handler(IsPrivate(), CommandStart())
 async def bot_start_get_contact(message: types.Message):
     await message.answer(
         text="Assalomu alaykum hurmatli abituriyent. Siz Sarbon o'quv markazining rasmiy botidan foydalanayapsiz!",
@@ -38,8 +38,8 @@ async def get_contact(message: types.Message, state: FSMContext):
         db.update_user(
             user_id = user.id,
             phone_number = contact.phone_number)
-        text = "Hurmatli foydalanuvhchi, siz ro'yxatdan o'tdingiz!\nNatijalaringizni\
-          bilish uchun sizga berilgan maxsus id raqamini kiriting."
+        text = "Hurmatli foydalanuvchi, siz ro'yxatdan o'tdingiz!\nNatijalaringizni "\
+        "bilish uchun sizga berilgan maxsus id raqamini kiriting."
         await message.answer(text=text, reply_markup= remove_button())
         await state.finish()
     elif not contact.user_id:

@@ -18,7 +18,7 @@ from data.config import SUPER_ADMIN
 # manage channels
 @dp.message_handler(IsPrivate(), IsAdmin(), Text(equals="🎞 Kanallar"))
 async def manage_channels(message: types.Message, state: FSMContext):
-    channels = await db.get_channels()
+    channels = db.get_channels()
     await message.answer(
         text=f"Kanallarni boshqarish\n\
             Kanallar soni: {len(channels)}", 
@@ -45,7 +45,7 @@ async def get_forwarding_message(message: types.Message, state: FSMContext):
     if message.forward_from_chat.type == "channel":
         ChannelID = message.forward_from_chat.id
         ChannelNAME = message.forward_from_chat.title
-        if await db.in_channel(ChannelID):
+        if db.in_channel(ChannelID):
             await message.answer(
                 text="Bu kanal allaqachon ro'yxatda mavjud",
                 reply_markup = manage_channels_keyboard)
@@ -62,7 +62,7 @@ async def get_forwarding_message(message: types.Message, state: FSMContext):
                     await message.answer(
                         text="Kanal botga muvafaqqiyatli ulandi.",
                         reply_markup=manage_channels_keyboard)
-                    await db.add_channel(ChannelID, ChannelNAME, invite_link) 
+                    db.add_channel(ChannelID, ChannelNAME, invite_link) 
                         
                 else:
                     await message.answer(
@@ -107,7 +107,7 @@ async def get_channel_id(message: types.Message, state: FSMContext):
     channel_id = message.text
     if channel_id.isdigit():
         channel_id = int(channel_id)
-        if await db.in_channel(channel_id):
+        if db.in_channel(channel_id):
             await state.update_data(channel_id=channel_id)
             await message.answer(
                 text="Kanalni o'chirishni tasdiqlaysizmi?", 
@@ -132,7 +132,7 @@ async def confirm_delete_channel(message: types.Message, state: FSMContext):
     data = await state.get_data()
     channel_id = data.get("channel_id")
     if message.text == "Ha":
-        await db.delete_channel(channel_id)
+        db.delete_channel(channel_id)
         await message.answer(
             text="Kanal o'chirildi", 
             reply_markup=manage_channels_keyboard)
@@ -156,7 +156,7 @@ async def confirm_delete_channel(message: types.Message, state: FSMContext):
 # list of existing channels
 @dp.message_handler(IsPrivate(), IsAdmin(), Text(equals="Kanallar ro'yxati"))
 async def list_of_channels(message: types.Message, state: FSMContext):
-    channels = await db.get_channels()
+    channels = db.get_channels()
     if len(channels) == 0:
         await message.answer(
             text="Kanal ro'yxati bo'sh.", 

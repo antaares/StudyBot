@@ -2,11 +2,10 @@ from typing import Union
 
 from aiogram import Bot
 
-from loader import db
+from loader import db, bot
 
 
 async def check(user_id):
-    bot = Bot.get_current()
     FinalSatatus = True
     channels = db.get_channels()
     for channel in channels:

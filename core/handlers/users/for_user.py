@@ -17,6 +17,7 @@ async def getId(message: types.Message, state: FSMContext):
     id = message.text
     path = f"./core/files/unzips/{id}.pdf"
     if os.path.isfile(path):
+        await message.answer_chat_action(action="upload_document")
         with open(path, 'rb') as file:
             await message.answer_document(document=file, caption=f"{id} id raqamli fayl")
             text = "Bu bot ===== oquv markazining boti!!!\n\n"
