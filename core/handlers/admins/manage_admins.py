@@ -17,7 +17,7 @@ from data.config import SUPER_ADMIN
 
 @dp.message_handler(IsPrivate(), IsAdmin(), Text(equals='👥 Adminlar'), state="*")
 async def manage_admins(message: types.Message, state: FSMContext):
-    admins = await db.get_admins()
+    admins = db.get_admins()
     await message.answer(
         text=f"Adminlarni boshqarish\n\
             Adminlar soni: {len(admins)}", 
@@ -39,7 +39,7 @@ async def get_admin_id(message: types.Message, state: FSMContext):
     admin_id = message.text
     if admin_id.isdigit():
         admin_id = int(admin_id)
-        if await db.is_admin(admin_id):
+        if db.is_admin(admin_id):
             await message.answer(
                 text="Bu foydalanuvchi allaqachon adminlar ro'yxatida mavjud",
                 reply_markup = manage_admins_keyboard)
@@ -73,7 +73,7 @@ async def confirm_add_admin(message: types.Message, state: FSMContext):
     admin_id = data.get("admin_id")
     admin_name = data.get("admin_name")
     if message.text == "Ha":
-        await db.add_admin(admin_id, admin_name)
+        db.add_admin(admin_id, admin_name)
         await message.answer(
             text="Yangi admin qo'shildi", 
             reply_markup=manage_admins_keyboard)
@@ -97,21 +97,21 @@ async def delete_admin(message: types.Message, state: FSMContext):
         text="O'chirmoqchi bo'lgan adminning id raqamini yuboring:", 
         reply_markup=BACK
         )
-    await AdminState.AdminID.set()
+    await AdminState.DelAdminID.set()
 
 
 
-@dp.message_handler(IsPrivate(), IsAdmin(), state=AdminState.AdminID)
+@dp.message_handler(IsPrivate(), IsAdmin(), state=AdminState.DelAdminID)
 async def get_admin_id(message: types.Message, state: FSMContext):
     admin_id = message.text
     if admin_id.isdigit():
         admin_id = int(admin_id)
-        if await db.is_admin(admin_id):
+        if db.is_admin(admin_id):
             await state.update_data(admin_id=admin_id)
             await message.answer(
                 text="Adminni o'chirishni tasdiqlaysizmi?", 
                 reply_markup=YES_NO)
-            await AdminState.ConfirmAdmin.set()
+            await AdminState.DelConfirm.set()
         else:
             await message.answer(
                 text="Bunday admin mavjud emas", 
@@ -121,17 +121,17 @@ async def get_admin_id(message: types.Message, state: FSMContext):
         await message.answer(
             text="Foydalanuvchi ID raqamini kiriting, faqat raqamlardan foydalaning", 
             reply_markup=BACK)
-        await AdminState.AdminID.set()
+        await AdminState.DelAdminID.set()
 
 
 
 
-@dp.message_handler(IsPrivate(), IsAdmin(), state=AdminState.ConfirmAdmin)
+@dp.message_handler(IsPrivate(), IsAdmin(), state=AdminState.DelConfirm)
 async def confirm_delete_admin(message: types.Message, state: FSMContext):
     data = await state.get_data()
     admin_id = data.get("admin_id")
     if message.text == "Ha":
-        await db.delete_admin(admin_id)
+        db.delete_admin(admin_id)
         await message.answer(
             text="Admin o'chirildi", 
             reply_markup=manage_admins_keyboard)
@@ -145,12 +145,12 @@ async def confirm_delete_admin(message: types.Message, state: FSMContext):
         await message.answer(
             text="Iltimos, tugmalardan birini bosing", 
             reply_markup=YES_NO)
-        await AdminState.ConfirmAdmin.set()
+        await AdminState.DelConfirm.set()
 
 
 @dp.message_handler(IsPrivate(), IsAdmin(), Text(equals="Adminlar ro'yxati"), state="*")
 async def get_admins(message: types.Message, state: FSMContext):
-    admins = await db.get_admins()
+    admins = db.get_admins()
     if len(admins) == 0:
         await message.answer(
             text="Hozircha adminlar ro'yxatida hech kim yo'q", 
@@ -159,7 +159,7 @@ async def get_admins(message: types.Message, state: FSMContext):
     else:
         text = "Adminlar ro'yxati:\n"
         for admin in admins:
-            text += f"{admin[1]} - {admin[2]}\n"
+            text += f"Admin id: <code>{admin[0]}</code> - Ismi: {admin[1]}\n"
         await message.answer(
             text=text, 
             reply_markup=manage_admins_keyboard)

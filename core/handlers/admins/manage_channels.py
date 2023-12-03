@@ -59,6 +59,11 @@ async def get_forwarding_message(message: types.Message, state: FSMContext):
                 if chat_member.is_chat_admin():
                     invite_link = await bot.export_chat_invite_link(chat_id=ChannelID)
                     await state.update_data(invite_link=invite_link)
+                    await message.answer(
+                        text="Kanal botga muvafaqqiyatli ulandi.",
+                        reply_markup=manage_channels_keyboard)
+                    await db.add_channel(ChannelID, ChannelNAME, invite_link) 
+                        
                 else:
                     await message.answer(
                         text="Bot kanalga admin emas, botni kanalga admin qiling", 
@@ -84,7 +89,7 @@ async def get_forwarding_message(message: types.Message, state: FSMContext):
 
 @dp.message_handler(IsPrivate(), IsAdmin(), Text(equals="Kanal o'chirish"))
 async def delete_channel(message: types.Message, state: FSMContext):
-    channels = await db.get_channels()
+    channels = db.get_channels()
     if len(channels) == 0:
         await message.answer(
             text="Kanal ro'yxati bo'sh", 
@@ -159,7 +164,7 @@ async def list_of_channels(message: types.Message, state: FSMContext):
     else:
         text = "Kanallar ro'yxati:\n\n"
         for channel in channels:
-            text += f"📢 <b>{channel[1]}</b> -  ChannelID: <code>{channel[0]}</code>\n"
+            text += f"📢 <b><a href=\"{channel[3]}\">{channel[2][:30]}</a></b> -  ChannelID: <code>{channel[1]}</code>\n"
         await message.answer(
             text=text, 
             reply_markup=manage_channels_keyboard,

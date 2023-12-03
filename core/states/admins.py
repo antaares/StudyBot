@@ -16,9 +16,12 @@ class AdminState(StatesGroup):
     AdminID = State()
     AdminName = State()
     ConfirmAdmin = State()
+    DelAdminID = State()
+    DelConfirm = State()
 
     # manage channels
     ForwardingMessage = State()
+    ChannelID = State()
 
 
     # file manager

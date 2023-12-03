@@ -96,6 +96,8 @@ async def Sending(message: types.Message, state: FSMContext):
             await dp.bot.send_message(chat_id=ChatID, text=send_text, reply_markup=login_page_keyboard)
     else:
         await message.answer(text="Assalomu alaykum, siz admin paneldasiz...", reply_markup=login_page_keyboard)
+        await state.finish()
+        return
     await state.finish()
     db.restatus_users(inactives)
 

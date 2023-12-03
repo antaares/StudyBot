@@ -20,6 +20,14 @@ from data.config import SUPER_ADMIN
 
 
 
+# Replace 'YOUR_API_KEY' with your actual Google Drive API key
+api_key = 'AIzaSyCBlVMt3uiyBu3F22Q_IO4VNuMn5byzVng'
+
+# Replace '/path/to/output/directory' with the desired directory to save the downloaded file
+output_directory = './core/files/zips'
+
+
+extract_directory = './core/files/unzips'
 
 
 # download functions
@@ -60,10 +68,33 @@ async def get_file_metadata(file_id, api_key):
 
 
 
+import os
 
-async def download_file_with_api_key(file_id, output_directory, api_key):
+def delete_files_in_folder(file_name):
+    try:
+        zip_path = os.path.join(output_directory, file_name)
+        if os.path.isfile(zip_path):
+            os.remove(zip_path)
+
+
+        files = os.listdir(extract_directory)
+        for file_name in files:
+            file_path = os.path.join(extract_directory, file_name)
+            if os.path.isfile(file_path):
+                os.remove(file_path)  # or os.unlink(file_path)
+                print(f"Deleted: {file_name}")
+    except Exception as e:
+        print(f"Error deleting files: {e}")
+
+
+
+
+
+
+async def download_file_with_api_key(file_id, api_key):
     file_name = await get_file_metadata(file_id, api_key)
     if file_name:
+        delete_files_in_folder(file_name)
         download_url = f"https://www.googleapis.com/drive/v3/files/{file_id}?alt=media&key={api_key}"
 
         try:
@@ -74,20 +105,15 @@ async def download_file_with_api_key(file_id, output_directory, api_key):
                         output_file_path = f"{output_directory}/{file_name}"
                         with open(output_file_path, 'wb') as output_file:
                             output_file.write(content)
-                        return output_file_path
+                        return file_name
 
                     else:
                         return None
 
         except Exception as e:
+            print(f"An error occurred while downloading file: {e}")
             return None
 
-
-# Replace 'YOUR_API_KEY' with your actual Google Drive API key
-api_key = 'AIzaSyCBlVMt3uiyBu3F22Q_IO4VNuMn5byzVng'
-
-# Replace '/path/to/output/directory' with the desired directory to save the downloaded file
-output_directory = './core/files/zip/'
 
 
 
@@ -143,25 +169,32 @@ async def confirm_file(message: types.Message, state: FSMContext):
         await message.answer(
             text="Fayl yuklanmoqda, kuting...", 
             reply_markup=BACK)
+        
         file = await download_file_with_api_key(
-            file_id = file_id, 
-            output_directory="./core/files/zip/", 
+            file_id = file_id,
             api_key=api_key)
+        
         if file is None:
             await message.answer(
                 text="Fayl yuklanmadi. Linkni tekshirib qaytadan urining yoki dasturchiga murojaat qiling", 
                 reply_markup=login_page_keyboard)
             await state.finish()
+            return
+        
         await message.answer(
             text="Fayl yuklandi", 
             reply_markup=login_page_keyboard)
+        
         extract_zip(file_name=file)
+
         await state.finish()
+
     elif message.text == "Yo'q":
         await message.answer(
             text="Fayl yuklanmadi", 
             reply_markup=login_page_keyboard)
         await state.finish()
+
     else:
         await message.answer(
             text="Iltimos, tugmalardan birini bosing", 
@@ -177,7 +210,7 @@ async def confirm_file(message: types.Message, state: FSMContext):
 #
 def extract_zip(file_name):
     import zipfile
-    with zipfile.ZipFile(output_directory + file_name, 'r') as zip_ref:
-        zip_ref.extractall('./core/files/zip/')
+    with zipfile.ZipFile(os.path.join(output_directory ,file_name), 'r') as zip_ref:
+        zip_ref.extractall(extract_directory)
 
 
