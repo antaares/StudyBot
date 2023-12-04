@@ -56,22 +56,23 @@ async def get_forwarding_message(message: types.Message, state: FSMContext):
                 if chat_member.is_chat_admin():
                     invite_link = await bot.create_chat_invite_link(chat_id=ChannelID)
                     await state.update_data(invite_link=invite_link.invite_link)
+                    print(f"invite link: {invite_link.invite_link}")
                     await message.answer(
                         text="Kanal botga muvafaqqiyatli ulandi.",
                         reply_markup=manage_channels_keyboard)
                     
-                    db.add_channel(ChannelID, ChannelNAME, invite_link) 
+                    db.add_channel(ChannelID, ChannelNAME, invite_link.invite_link) 
                         
                 else:
                     await message.answer(
-                        text="Bot kanalga admin emas, botni kanalga admin qiling", 
+                        text="Bot kanalga admin emas, botni kanalga admin qiling 1", 
                         reply_markup=BACK)
                 await state.finish()
                
             except Exception as e:
                 print(f"THE ERROR: {e}")
                 await message.answer(
-                    text="Bot kanalga admin emas, botni kanalga admin qiling", 
+                    text="Bot kanalga admin emas, botni kanalga admin qiling 2", 
                     reply_markup=BACK)
                 await state.finish()
     else:
