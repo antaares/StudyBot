@@ -10,9 +10,6 @@ from aiogram.dispatcher.storage import FSMContext
 from filters.is_admin import IsAdmin
 from filters.is_private import IsPrivate
 
-from data.config import SUPER_ADMIN
-
-
 
 
 # manage channels
