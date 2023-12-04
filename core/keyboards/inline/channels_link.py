@@ -4,10 +4,10 @@ from loader import db, bot
 
 
 async def create_all_channels_link():
-    channels = db.get_channels()
+    channels = db.get_channels_data()
     markup = InlineKeyboardMarkup(row_width=1)
     for channel in channels:
-        link = await bot.export_chat_invite_link(chat_id=channel)
+        link = channel[3]
         markup.insert(InlineKeyboardButton(text="Kanalga a'zo bo'lish", url=link))
     markup.insert(InlineKeyboardButton(text="Tekshirish", callback_data="check_subs"))
     return markup

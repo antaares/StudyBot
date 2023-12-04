@@ -54,7 +54,7 @@ async def get_forwarding_message(message: types.Message, state: FSMContext):
                 bot_id = (await bot.get_me()).id
                 chat_member = await bot.get_chat_member(chat_id=ChannelID, user_id=bot_id)
                 if chat_member.is_chat_admin():
-                    invite_link = await bot.export_chat_invite_link(chat_id=ChannelID)
+                    invite_link = await bot.create_chat_invite_link(chat_id=ChannelID)
                     await state.update_data(invite_link=invite_link)
                     await message.answer(
                         text="Kanal botga muvafaqqiyatli ulandi.",
