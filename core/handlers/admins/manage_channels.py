@@ -39,7 +39,7 @@ async def add_channel(message: types.Message, state: FSMContext):
 
 @dp.message_handler(IsPrivate(), IsAdmin(), state=AdminState.ForwardingMessage, content_types=types.ContentType.ANY)
 async def get_forwarding_message(message: types.Message, state: FSMContext):
-    if message.forward_from_chat.type == "channel":
+    if message.forward_from_chat is not None and message.forward_from_chat.type == "channel":
         ChannelID = message.forward_from_chat.id
         ChannelNAME = message.forward_from_chat.title
         if db.in_channel(ChannelID):
