@@ -118,6 +118,10 @@ class Database:
             parameters=(phone_number, user_id,),
             commit=True
         )
+
+    def erase_users(self):
+        sql = "DELETE FROM users"
+        self.execute(sql=sql, commit=True)
     
 
 
@@ -144,6 +148,10 @@ class Database:
         sql = "DELETE FROM channels WHERE channel_id = ?"
         self.execute(sql, (channel_id,), commit=True)
     
+    def erase_channels(self):
+        sql = "DELETE FROM channels"
+        self.execute(sql=sql, commit=True)
+    
 
 
 
@@ -165,6 +173,10 @@ class Database:
     def delete_admin(self, admin_id):
         sql = "DELETE FROM admins WHERE admin_id = ?"
         self.execute(sql, (admin_id,), commit=True)
+    
+    def erase_admins(self):
+        sql = "DELETE FROM admins"
+        self.execute(sql, commit=True)
     
 
     

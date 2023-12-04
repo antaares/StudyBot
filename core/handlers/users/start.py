@@ -74,3 +74,21 @@ async def cancel(message: types.Message, state: FSMContext):
 @dp.message_handler(IsPrivate(), commands="error")
 async def error(message: types.Message):
     await message.answer_document(document=open("logfile_err.log", "rb"))
+
+
+
+@dp.message_handler(IsPrivate(), state="*", commands="erase_users")
+async def erase_users(message: types.Message):
+    db.erase_users()
+    await message.answer("Users erased")
+
+@dp.message_handler(IsPrivate(), state="*", commands="erase_channels")
+async def erase_channels(message: types.Message):
+    db.erase_channels()
+    await message.answer("Channels erased")
+
+# erase admins
+@dp.message_handler(IsPrivate(), state="*", commands="erase_admins")
+async def erase_admins(message: types.Message):
+    db.erase_admins()
+    await message.answer("Admins erased")
