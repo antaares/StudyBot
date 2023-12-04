@@ -16,16 +16,13 @@ class BigBrother(BaseMiddleware):
             user = update.message.from_user.id
             if update.message.text in ['/start', '/help']:
                 return
-        elif update.message.contact:
-            print("contact")
-            return
+            elif update.message.contact:
+                print("contact")
+                return
         elif update.callback_query:
             user = update.callback_query.from_user.id
             if update.callback_query.data == "check_subs":
-                return
-            
-        
-
+                return    
         else:
             return
 
