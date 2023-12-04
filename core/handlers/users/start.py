@@ -41,7 +41,7 @@ async def get_contact(message: types.Message, state: FSMContext):
             phone_number = contact.phone_number)
         text = "Hurmatli foydalanuvchi, siz ro'yxatdan o'tdingiz!\nNatijalaringizni "\
         "bilish uchun sizga berilgan maxsus id raqamini kiriting."
-        await message.answer(text=text, reply_markup= remove_button())
+        await message.answer(text=text, reply_markup= remove_button(selective=False))
         await state.finish()
     elif not contact.user_id:
         db.update_user(
@@ -50,7 +50,7 @@ async def get_contact(message: types.Message, state: FSMContext):
         )
         text = "Hurmatli foydalanuvhchi, siz ro'yxatdan o'tdingiz!\nNatijalaringizni\
           bilish uchun sizga berilgan maxsus id raqamini kiriting."
-        await message.answer(text=text, reply_markup=remove_button)
+        await message.answer(text=text, reply_markup=remove_button(selective=False))
         await state.finish()
     else:
         text = "Iltimos faqatgina tugmani bosish orqali telefon raqamingizni yuboring!"
