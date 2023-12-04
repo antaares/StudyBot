@@ -69,6 +69,7 @@ async def get_forwarding_message(message: types.Message, state: FSMContext):
                 await state.finish()
                
             except Exception as e:
+                print(f"THE ERROR: {e}")
                 await message.answer(
                     text="Bot kanalga admin emas, botni kanalga admin qiling", 
                     reply_markup=BACK)
