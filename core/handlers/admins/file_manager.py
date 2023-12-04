@@ -128,9 +128,17 @@ async def file_manager(message: types.Message, state: FSMContext):
     text = "Fayl yuklash uchun Google Drive linkini yuboring\n"\
     "ESLATMA: Yangi fayl yuklash davomida serverdagi fayllar o‘chirib yuboriladi."
     await message.answer(
-        text="Fayl yuklash uchun Google Drive linkini yuboring", 
+        text=text,
         reply_markup=BACK)
     await AdminState.GetFile.set()
+
+
+@dp.message_handler(IsPrivate(), IsAdmin(), Text(equals="Bekor qilish"), state="*")
+async def cancel(message: types.Message, state: FSMContext):
+    await message.answer(
+        text="Qanday amal bajaramiz!", 
+        reply_markup=login_page_keyboard)
+    await state.finish()
 
 
 @dp.message_handler(IsPrivate(), IsAdmin(), state=AdminState.GetFile)
@@ -150,12 +158,7 @@ async def get_file(message: types.Message, state: FSMContext):
         await AdminState.GetFile.set()
 
 
-@dp.message_handler(IsPrivate(), IsAdmin(), Text(equals="Bekor qilish"), state="*")
-async def cancel(message: types.Message, state: FSMContext):
-    await message.answer(
-        text="Qanday amal bajaramiz!", 
-        reply_markup=login_page_keyboard)
-    await state.finish()
+
 
 
 @dp.message_handler(IsPrivate(), IsAdmin(), state=AdminState.FileConfirm)
