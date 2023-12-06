@@ -18,8 +18,8 @@ from filters.is_private import IsPrivate
 async def manage_admins(message: types.Message, state: FSMContext):
     admins = db.get_admins()
     await message.answer(
-        text=f"Adminlarni boshqarish\n\
-            Adminlar soni: {len(admins)}", 
+        text=f"Adminlarni boshqarish\n"\
+            "Adminlar soni: {len(admins)}", 
         reply_markup=manage_admins_keyboard)
 
 

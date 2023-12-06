@@ -17,8 +17,8 @@ from filters.is_private import IsPrivate
 async def manage_channels(message: types.Message, state: FSMContext):
     channels = db.get_channels()
     await message.answer(
-        text=f"Kanallarni boshqarish\n\
-            Kanallar soni: {len(channels)}", 
+        text=f"Kanallarni boshqarish\n"\
+            "Kanallar soni: {len(channels)}", 
         reply_markup=manage_channels_keyboard)
 
 
