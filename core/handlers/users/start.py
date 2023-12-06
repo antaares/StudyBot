@@ -24,6 +24,11 @@ async def bot_start_get_contact(message: types.Message):
         text="Assalomu alaykum hurmatli abituriyent. Siz Sarbon o'quv markazining rasmiy botidan foydalanayapsiz!",
         reply_markup=types.ReplyKeyboardRemove())
     contact = db.contact(message.from_user.id)
+    db.add_user(
+        user_id= message.from_user.id,
+        user_name= message.from_user.full_name,
+        username= message.from_user.username if message.from_user.username else None,
+    )
     if contact:
         text = "Javoblar varaqasi ID raqamini kiriting."
         await message.answer(text=text, reply_markup=types.ReplyKeyboardRemove())
@@ -31,11 +36,7 @@ async def bot_start_get_contact(message: types.Message):
     text = "Hurmatli foydalanuvhchi, <b>Kontaktni ulashish</b> tugmasini bosib telefon raqamingizni yuboring."
     await message.answer(text=text, reply_markup=contact_button)
     await UserState.GetContact.set()
-    db.add_user(
-        user_id= message.from_user.id,
-        user_name= message.from_user.full_name,
-        username= message.from_user.username if message.from_user.username else None,
-    )
+  
 
 
 @dp.message_handler(IsPrivate(), content_types=types.ContentType.CONTACT, state=UserState.GetContact)
