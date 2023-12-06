@@ -23,6 +23,11 @@ async def bot_start_get_contact(message: types.Message):
     await message.answer(
         text="Assalomu alaykum hurmatli abituriyent. Siz Sarbon o'quv markazining rasmiy botidan foydalanayapsiz!",
         reply_markup=types.ReplyKeyboardRemove())
+    contact = db.contact(message.from_user.id)
+    if contact:
+        text = "Javoblar varaqasi ID raqamini kiriting."
+        await message.answer(text=text, reply_markup=types.ReplyKeyboardRemove())
+        return
     text = "Hurmatli foydalanuvhchi, <b>Kontaktni ulashish</b> tugmasini bosib telefon raqamingizni yuboring."
     await message.answer(text=text, reply_markup=contact_button)
     await UserState.GetContact.set()

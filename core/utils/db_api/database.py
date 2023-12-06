@@ -50,7 +50,9 @@ class Database:
         CREATE TABLE IF NOT EXISTS users (
             id INTEGER PRIMARY KEY,
             status TEXT,
-            phone_number TEXT
+            phone_number TEXT,
+            username TEXT DEFAULT "null",
+            fullname TEXT DEFAULT "null"
             );
             """
         self.execute(sql, commit=True)
@@ -89,9 +91,10 @@ class Database:
     
     # Users table functions
     # add a user to the database
-    def add_user(self, user_id: int, phone_number: str = "--", status: str = "active"):
-        sql = "INSERT OR IGNORE INTO users (id, status, phone_number) VALUES (?, ?, ?)"
-        self.execute(sql, (user_id, status, phone_number), commit=True)
+    def add_user(self, user_id: int, phone_number: str = "--", status: str = "active", username: str = "null", fullname: str = "null"):
+        # sql = "INSERT OR IGNORE INTO users (id, status, phone_number) VALUES (?, ?, ?)"
+        sql = "INSERT OR IGNORE INTO users (id, status, phone_number, username, fullname) VALUES (?, ?, ?, ?, ?)"
+        self.execute(sql, (user_id, status, phone_number, username, fullname), commit=True)
 
     def all(self):
         sql = "SELECT id FROM users"
@@ -118,6 +121,12 @@ class Database:
             parameters=(phone_number, user_id,),
             commit=True
         )
+    
+
+    def contact(self, user_id):
+        sql = "SELECT phone_number FROM users WHERE id = ?"
+        response = self.execute(sql, parameters=(user_id,), fetchone=True)
+        return response[0]
 
     def erase_users(self):
         sql = "DELETE FROM users"

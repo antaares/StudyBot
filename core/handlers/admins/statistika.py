@@ -17,8 +17,9 @@ from handlers.admins.keyboards import get_data_excel_keyboard, login_page_keyboa
 async def statistika(message: types.Message, state: FSMContext):
     users = db.all()
     inactiv_users = db.inactive_users()
-    await message.answer(f"Botning jami foydalanuvchilari: {len(users)}.\n\
-                         Botni bloklagan foydalanuvchilar soni{len(inactiv_users)}", reply_markup=get_data_excel_keyboard)
+    await message.answer(f"Botning jami foydalanuvchilari: {len(users)}.\n"\
+                         f"Botni bloklagan foydalanuvchilar soni{len(inactiv_users)}", 
+                         reply_markup=get_data_excel_keyboard)
 
 
 import sqlite3
