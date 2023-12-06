@@ -126,7 +126,10 @@ class Database:
     def contact(self, user_id):
         sql = "SELECT phone_number FROM users WHERE id = ?"
         response = self.execute(sql, parameters=(user_id,), fetchone=True)
-        return response[0]
+        if response:
+            return True
+        else:
+            return None
 
     def erase_users(self):
         sql = "DELETE FROM users"
