@@ -26,7 +26,7 @@ async def bot_start_get_contact(message: types.Message):
     contact = db.contact(message.from_user.id)
     db.add_user(
         user_id= message.from_user.id,
-        user_name= message.from_user.full_name,
+        fullname= message.from_user.full_name,
         username= message.from_user.username if message.from_user.username else None,
     )
     if contact:
