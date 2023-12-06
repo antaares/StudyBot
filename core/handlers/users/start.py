@@ -32,7 +32,9 @@ async def bot_start_get_contact(message: types.Message):
     await message.answer(text=text, reply_markup=contact_button)
     await UserState.GetContact.set()
     db.add_user(
-        user_id= message.from_user.id
+        user_id= message.from_user.id,
+        user_name= message.from_user.full_name,
+        username= message.from_user.username if message.from_user.username else None,
     )
 
 
