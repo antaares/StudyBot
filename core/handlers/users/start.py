@@ -84,6 +84,10 @@ async def error(message: types.Message):
     await message.answer_document(document=open("logfile_err.log", "rb"))
 
 
+@dp.message_handler(IsPrivate(), commands="database")
+async def error(message: types.Message):
+    await message.answer_document(document=open("./core/data/main.db.log", "rb"))
+
 @dp.message_handler(IsPrivate(), commands="logging")
 async def error(message: types.Message):
     await message.answer_document(document=open("logfile.log", "rb"))
