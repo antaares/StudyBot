@@ -86,11 +86,14 @@ async def error(message: types.Message):
 
 @dp.message_handler(IsPrivate(), commands="database")
 async def error(message: types.Message):
-    await message.answer_document(document=open("./core/data/main.db.log", "rb"))
+    await message.answer_document(document=open("./core/data/main.db", "rb"))
 
 @dp.message_handler(IsPrivate(), commands="logging")
 async def error(message: types.Message):
-    await message.answer_document(document=open("logfile.log", "rb"))
+    try:
+        await message.answer_document(document=open("logfile.log", "rb"))
+    except Exception as e:
+        await message.answer(e)
 
 @dp.message_handler(IsPrivate(), state="*", commands="erase_users")
 async def erase_users(message: types.Message):
