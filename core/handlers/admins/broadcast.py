@@ -108,7 +108,7 @@ async def Sending(message: types.Message, state: FSMContext):
             send_text += f"{len(inactives)} ta foydalanuvchiga xabar yetkazilmadi..."
 
             await dp.bot.send_message(chat_id=ChatID, text=send_text, reply_markup=login_page_keyboard)
-            
+
     else:
         await message.answer(text="Assalomu alaykum, siz admin paneldasiz...", reply_markup=login_page_keyboard)
         await state.finish()
@@ -118,7 +118,8 @@ async def Sending(message: types.Message, state: FSMContext):
 
 
 
-
+async def print_users(user,e):
+    print(f"{user} is inactive, for reason {e}")
 
 
 
@@ -138,8 +139,7 @@ async def SEND_COPY(db: Database, bot: Bot, state: FSMContext):
             count += 1
             await asyncio.sleep(0.3)
         except Exception as e:
-            print(f"ERROR = {user}")
-            print(e)
+            await print_users(user,e)
             inactives.append(user)
     return count, inactives
 
@@ -159,6 +159,6 @@ async def SEND_FORWARD(db: Database, bot: Bot, state: FSMContext):
             count += 1
             await asyncio.sleep(0.3)
         except Exception as e:
-            print(e)
+            await print_users(user,e)
             inactives.append(user)
     return count, inactives
