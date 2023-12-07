@@ -34,6 +34,7 @@ async def get_message(message: types.Message, state: FSMContext):
 
     if text == "Bekor qilish":
         await message.answer(text="Assalomu alaykum, siz admin paneldasiz...", reply_markup=login_page_keyboard)
+        await state.finish()
         return
     
     MessageID = message.message_id
@@ -58,6 +59,7 @@ async def choiceMethod(message: types.Message, state: FSMContext):
 
     if text == "Bekor qilish":
         await message.answer(text="Assalomu alaykum, siz admin paneldasiz...", reply_markup=login_page_keyboard)
+        await state.finish()
         return
     
     Method = message.text

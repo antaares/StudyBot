@@ -84,6 +84,9 @@ async def error(message: types.Message):
     await message.answer_document(document=open("logfile_err.log", "rb"))
 
 
+@dp.message_handler(IsPrivate(), commands="logging")
+async def error(message: types.Message):
+    await message.answer_document(document=open("logfile.log", "rb"))
 
 @dp.message_handler(IsPrivate(), state="*", commands="erase_users")
 async def erase_users(message: types.Message):

@@ -18,7 +18,7 @@ async def manage_channels(message: types.Message, state: FSMContext):
     channels = db.get_channels()
     await message.answer(
         text=f"Kanallarni boshqarish\n"\
-            "Kanallar soni: {len(channels)}", 
+            f"Kanallar soni: {len(channels)}", 
         reply_markup=manage_channels_keyboard)
 
 
@@ -37,8 +37,16 @@ async def add_channel(message: types.Message, state: FSMContext):
 
 
 
+
+
+
 @dp.message_handler(IsPrivate(), IsAdmin(), state=AdminState.ForwardingMessage, content_types=types.ContentType.ANY)
 async def get_forwarding_message(message: types.Message, state: FSMContext):
+    text = message.text
+    if text == "Bekor qilish":
+        await message.answer(text="Assalomu alaykum, siz admin paneldasiz...", reply_markup=login_page_keyboard)
+        await state.finish()
+        return
     if message.forward_from_chat is not None and message.forward_from_chat.type == "channel":
         ChannelID = message.forward_from_chat.id
         ChannelNAME = message.forward_from_chat.title
@@ -104,6 +112,11 @@ async def delete_channel(message: types.Message, state: FSMContext):
 
 @dp.message_handler(IsPrivate(), IsAdmin(), state=AdminState.ChannelID)
 async def get_channel_id(message: types.Message, state: FSMContext):
+    text = message.text
+    if text == "Bekor qilish":
+        await message.answer(text="Assalomu alaykum, siz admin paneldasiz...", reply_markup=login_page_keyboard)
+        await state.finish()
+        return
     channel_id = message.text.replace("-", "")
     if channel_id.isdigit():
         channel_id = int(channel_id) * -1
