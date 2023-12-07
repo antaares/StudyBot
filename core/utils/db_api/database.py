@@ -106,6 +106,8 @@ class Database:
         return self.execute(sql, fetchall=True)
     
     def restatus_users(self, inactives):
+        sql = "UPDATE users SET status = 'active'"
+        self.execute(sql, commit=True)
         sql = "UPDATE users SET status = 'inactive' WHERE id = ?"
         for user in inactives:
             self.execute(sql, (user,), commit=True)

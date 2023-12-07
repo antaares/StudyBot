@@ -9,7 +9,7 @@ from aiogram.dispatcher.filters import Text
 from aiogram.dispatcher.storage import FSMContext
 from filters.is_admin import IsAdmin
 from filters.is_private import IsPrivate
-
+import logging
 
 
 
@@ -82,23 +82,33 @@ async def choiceMethod(message: types.Message, state: FSMContext):
 @dp.message_handler(IsPrivate(), state=AdminState.Confirm)
 async def Sending(message: types.Message, state: FSMContext):
     text = message.text
+
     if text == "Yuborish":
         one_time_message = await message.answer(text="Xabaringiz yuborilmoqda...", reply_markup=types.ReplyKeyboardRemove())
         data = await state.get_data()
         Method = data['Method']
         ChatID = data['ChatID']
+
         if Method == "Forward Message":
             count, inactives = await SEND_FORWARD(db, bot, state)
+
             await one_time_message.delete()
+
             send_text = f"Tayyor, sizning xabaringiz {count} ta foydalanuvchiga yetkazildi...\n"
             send_text += f"{len(inactives)} ta foydalanuvchiga xabar yetkazilmadi..."
+
             await dp.bot.send_message(chat_id=ChatID, text=send_text, reply_markup=login_page_keyboard)
+
         else:
             count, inactives = await SEND_COPY(db, bot, state)
+
             await one_time_message.delete()
+
             send_text = f"Tayyor, sizning xabaringiz {count} ta foydalanuvchiga yetkazildi...\n"
             send_text += f"{len(inactives)} ta foydalanuvchiga xabar yetkazilmadi..."
+
             await dp.bot.send_message(chat_id=ChatID, text=send_text, reply_markup=login_page_keyboard)
+            
     else:
         await message.answer(text="Assalomu alaykum, siz admin paneldasiz...", reply_markup=login_page_keyboard)
         await state.finish()
