@@ -83,16 +83,19 @@ async def choiceMethod(message: types.Message, state: FSMContext):
 async def Sending(message: types.Message, state: FSMContext):
     text = message.text
     if text == "Yuborish":
+        one_time_message = await message.answer(text="Xabaringiz yuborilmoqda...", reply_markup=types.ReplyKeyboardRemove())
         data = await state.get_data()
         Method = data['Method']
         ChatID = data['ChatID']
         if Method == "Forward Message":
             count, inactives = await SEND_FORWARD(db, bot, state)
+            await one_time_message.delete()
             send_text = f"Tayyor, sizning xabaringiz {count} ta foydalanuvchiga yetkazildi...\n"
             send_text += f"{len(inactives)} ta foydalanuvchiga xabar yetkazilmadi..."
             await dp.bot.send_message(chat_id=ChatID, text=send_text, reply_markup=login_page_keyboard)
         else:
             count, inactives = await SEND_COPY(db, bot, state)
+            await one_time_message.delete()
             send_text = f"Tayyor, sizning xabaringiz {count} ta foydalanuvchiga yetkazildi...\n"
             send_text += f"{len(inactives)} ta foydalanuvchiga xabar yetkazilmadi..."
             await dp.bot.send_message(chat_id=ChatID, text=send_text, reply_markup=login_page_keyboard)
@@ -125,6 +128,7 @@ async def SEND_COPY(db: Database, bot: Bot, state: FSMContext):
             count += 1
             await asyncio.sleep(0.3)
         except Exception as e:
+            print(f"ERROR = {user}")
             print(e)
             inactives.append(user)
     return count, inactives
